@@ -5,13 +5,24 @@
         <button>Create New Form</button>
     </form> -->
 
-    <ul>
-        <% for(let listing of allListings) { %>
-             <li>
-              <a href="/listings/<%= listing._id %>"><%= listing.title %></a>
-            </li>
-        <% }; %>
-    </ul>
+<div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 g-4">
+  
+ <% for(let listing of allListings) { %>
+ <div class="card col" style="width: 20rem;">
+  <img src="<%= listing.image.url %>" class="card-img-top" alt="Listing Image" style="height: 200px; width: 100%; object-fit: cover;">
 
+  <div class="card-body">
+    <p class="card-text"><a href="/listings/<%= listing._id %>">
+       <b><%= listing.title %></b> </a><br>
+        $<%= listing.price %> /per night
+    
+    </p>
+  </div>
+</div>
+ <% }; %>
+
+</div>
+
+    
 </body>
 

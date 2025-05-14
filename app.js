@@ -42,6 +42,7 @@ app.get("/listings",async (req, res) => {
 }
 );
 
+
 //route to create a new listing
 app.get("/listings/new", (req, res) => {
     res.render("listings/new");
