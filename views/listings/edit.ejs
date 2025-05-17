@@ -1,39 +1,72 @@
 <% layout('/layouts/boilerplate.ejs') -%>
 
 <div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-  <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" class="bg-white p-4 rounded shadow-sm w-100" style="max-width: 500px;">
+  <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" class="bg-white p-4 rounded shadow-sm w-100 needs-validation" style="max-width: 500px;" novalidate>
     <h1 class="text-center mb-4">Edit Listing</h1>
 
+    <!-- Title -->
     <div class="mb-3">
       <label for="title" class="form-label">Title</label>
-      <input type="text" id="title" name="title" class="form-control" value="<%= listing.title %>" required>
+      <input type="text" id="title" name="title" class="form-control" value="<%= listing.title %>" required minlength="3" maxlength="100">
+      <div class="invalid-feedback">Title is required (3–100 characters).</div>
     </div>
 
+    <!-- Description -->
     <div class="mb-3">
       <label for="description" class="form-label">Description</label>
-      <textarea id="description" name="description" class="form-control" required><%= listing.description %></textarea>
+      <textarea id="description" name="description" class="form-control" required minlength="10" maxlength="1000"><%= listing.description %></textarea>
+      <div class="invalid-feedback">Description is required (10–1000 characters).</div>
     </div>
 
+    <!-- Image URL -->
     <div class="mb-3">
       <label for="image" class="form-label">Image URL</label>
-      <input type="url" id="image" name="image" class="form-control" value="<%= listing.image.url %>" required>
+      <input type="url" id="image" name="image" class="form-control" value="<%= listing.image.url %>" required pattern="https?://.+\.(jpg|jpeg|png|webp|gif)">
+      <div class="invalid-feedback">Enter a valid image URL (ending in jpg, png, etc.).</div>
     </div>
 
+    <!-- Price -->
     <div class="mb-3">
-      <label for="price" class="form-label">Price</label>
-      <input type="number" id="price" name="price" class="form-control" value="<%= listing.price %>" required>
+      <label for="price" class="form-label">Price ($)</label>
+      <input type="number" id="price" name="price" class="form-control" value="<%= listing.price %>" required min="1" step="0.01">
+      <div class="invalid-feedback">Enter a valid price (minimum $1).</div>
     </div>
 
+    <!-- Location -->
     <div class="mb-3">
       <label for="location" class="form-label">Location</label>
-      <input type="text" id="location" name="location" class="form-control" value="<%= listing.location %>" required>
+      <input type="text" id="location" name="location" class="form-control" value="<%= listing.location %>" required minlength="2" maxlength="100">
+      <div class="invalid-feedback">Location must be 2–100 characters.</div>
     </div>
 
+    <!-- Country -->
     <div class="mb-3">
       <label for="country" class="form-label">Country</label>
-      <input type="text" id="country" name="country" class="form-control" value="<%= listing.country %>" required>
+      <input type="text" id="country" name="country" class="form-control" value="<%= listing.country %>" required pattern="^[A-Za-z\s]+$" minlength="2">
+      <div class="invalid-feedback">Enter a valid country name (letters only).</div>
     </div>
 
+    <!-- Submit -->
     <button type="submit" class="btn btn-primary w-100">Update Listing</button>
   </form>
 </div>
+
+<!-- Bootstrap Validation Script -->
+<script>
+(function () {
+  'use strict'
+  const forms = document.querySelectorAll('.needs-validation')
+
+  Array.from(forms).forEach(function (form) {
+    form.addEventListener('submit', function (event) {
+      if (!form.checkValidity()) {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+
+      form.classList.add('was-validated')
+    }, false)
+  })
+})()
+</script>
+ 
