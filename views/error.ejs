@@ -1,0 +1,8 @@
+<%- include('includes/navbar.ejs') %>
+
+<h1>Oops! <%= err.statusCode || 500 %> Error</h1>
+<p><%= err.message || "Something went wrong." %></p>
+
+<a href="/listings">← Go back to listings</a>
+
+<%- include('includes/footer') %>

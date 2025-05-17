@@ -5,6 +5,9 @@ const Listing = require('./models/listing');
 const path = require('path');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
+const wrapAsync = require('./utils/wrapAsync');
+const ExpressError = require('./utils/ExpressError');
+
 
 main().then(() => {
     console.log('Connected to MongoDB');
@@ -36,11 +39,10 @@ app.get('/', (req, res) => {
 
 
 //lists all places name
-app.get("/listings",async (req, res) => {
+app.get("/listings", wrapAsync(async (req, res) => {
     const allListings = await Listing.find({});
     res.render("listings/index", { allListings });
-}
-);
+}));
 
 
 //route to create a new listing
@@ -51,48 +53,42 @@ app.get("/listings/new", (req, res) => {
 
 
 //when clicked in any place name
-app.get("/listings/:id", async (req, res) => {
+app.get("/listings/:id", wrapAsync(async (req, res) => {
     const { id } = req.params;
     const listing = await Listing.findById(id);
     res.render("listings/show", { listing });
-}
-);
+}));
 
 // Create new route after clicking submit button
-app.post("/listings", async (req, res) => {
+app.post("/listings", wrapAsync(async (req, res) => {
     const { title, price, description, location, country, image } = req.body;
-
     const newListing = new Listing({
         title,
         price,
         description,
         image: {
             url: image || "https://images.unsplash.com/photo-1630997065202-afb8c444da0a?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-            filename: "default"  // Optional: you can use a better name or extract from the URL
+            filename: "default"
         },
         location,
         country
     });
-
     await newListing.save();
     res.redirect(`/listings/`);
-});
-
+}));
 
 //Edit route
-app.get("/listings/:id/edit", async (req, res) => {
+app.get("/listings/:id/edit", wrapAsync(async (req, res) => {
     const { id } = req.params;
     const listing = await Listing.findById(id);
     res.render("listings/edit", { listing });
-}
-);
+}));
 
 
 // Update listing – handles form submission from the edit page
-app.put("/listings/:id", async (req, res) => {
+app.put("/listings/:id", wrapAsync(async (req, res) => {
     const { id } = req.params;
     const { title, price, description, location, country, image } = req.body;
-
     const updatedListing = await Listing.findByIdAndUpdate(
         id,
         {
@@ -101,21 +97,38 @@ app.put("/listings/:id", async (req, res) => {
             description,
             image: {
                 url: image,
-                filename: "updated" // optional
+                filename: "updated"
             },
             location,
             country
         },
         { new: true }
     );
-
     res.redirect(`/listings/`);
-});
+}));
 
 //to delete a listing
-app.delete("/listings/:id", async (req, res) => {
+app.delete("/listings/:id", wrapAsync(async (req, res) => {
     const { id } = req.params;
     await Listing.findByIdAndDelete(id);
     res.redirect(`/listings/`);
-}
-);
+}));
+
+
+
+// Test error handling
+app.get("/test-error", wrapAsync(async (req, res) => {
+    throw new ExpressError("Test error message", 404);
+}));
+
+
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    const { statusCode = 500 } = err;
+    if (!err.message) err.message = 'Something went wrong';
+    res.status(statusCode).render('error', { err });
+});
+
+
+
