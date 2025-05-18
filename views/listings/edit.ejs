@@ -21,7 +21,7 @@
     <!-- Image URL -->
     <div class="mb-3">
       <label for="image" class="form-label">Image URL</label>
-      <input type="url" id="image" name="image" class="form-control" value="<%= listing.image.url %>" required pattern="https?://.+\.(jpg|jpeg|png|webp|gif)">
+      <input type="url" id="image" name="image" class="form-control" value="<%= listing.image %>" required pattern="^https?:\/\/(images\.unsplash\.com\/.+|.+\.(jpg|jpeg|png|webp|gif))$">
       <div class="invalid-feedback">Enter a valid image URL (ending in jpg, png, etc.).</div>
     </div>
 

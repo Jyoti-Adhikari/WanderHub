@@ -7,6 +7,7 @@ const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
 const wrapAsync = require('./utils/wrapAsync');
 const ExpressError = require('./utils/ExpressError');
+const listingValidationSchema = require('./validation/listingValidation');
 
 
 main().then(() => {
@@ -31,6 +32,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 //basic api
 app.get('/', (req, res) => {
@@ -60,19 +62,23 @@ app.get("/listings/:id", wrapAsync(async (req, res) => {
 }));
 
 // Create new route after clicking submit button
-app.post("/listings", wrapAsync(async (req, res) => {
+app.post("/listings", wrapAsync(async (req, res, next) => {
+    const { error } = listingValidationSchema.validate(req.body);
+    if (error) {
+        return res.status(400).send(error.details.map(e => e.message).join(", "));
+    }
+
     const { title, price, description, location, country, image } = req.body;
+
     const newListing = new Listing({
         title,
         price,
         description,
-        image: {
-            url: image || "https://images.unsplash.com/photo-1630997065202-afb8c444da0a?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-            filename: "default"
-        },
+        image,
         location,
         country
     });
+
     await newListing.save();
     res.redirect(`/listings/`);
 }));
@@ -95,10 +101,7 @@ app.put("/listings/:id", wrapAsync(async (req, res) => {
             title,
             price,
             description,
-            image: {
-                url: image,
-                filename: "updated"
-            },
+            image,
             location,
             country
         },
