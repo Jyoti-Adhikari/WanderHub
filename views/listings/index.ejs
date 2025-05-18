@@ -7,25 +7,26 @@
     <!-- Listings Grid -->
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
       <% for (let listing of allListings) { %>
-        <div class="col">
-          <div class="card h-100 shadow-sm border-0">
-            <img 
-              src="<%= listing.image.url %>" 
-              class="card-img-top" 
-              alt="Listing Image" 
-              style="height: 200px; object-fit: cover;"
-            >
-            <div class="card-body">
-              <p class="card-text mb-1">
-                <a href="/listings/<%= listing._id %>" class="text-decoration-none fw-bold text-primary">
-                  <%= listing.title %>
-                </a>
-              </p>
-              <p class="text-muted">$<%= listing.price %> /per night</p>
-            </div>
+      <div class="col">
+      <div class="card h-100 shadow-sm border-0">
+        <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark">
+          <img 
+            src="<%= listing.image.url %>" 
+            class="card-img-top" 
+            alt="Listing Image" 
+            style="height: 200px; object-fit: cover;"
+          >
+          <div class="card-body">
+            <p class="card-text mb-1 fw-bold">
+              <%= listing.title %>
+            </p>
+            <p class="text-muted">$<%= listing.price %> /per night</p>
           </div>
-        </div>
-      <% } %>
-    </div>
+        </a>
+      </div>
+      </div>
+    <% } %>
   </div>
+
+</div>
 </body>
