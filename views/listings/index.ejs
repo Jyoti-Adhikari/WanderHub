@@ -1,28 +1,31 @@
 <% layout('/layouts/boilerplate.ejs') -%>
 <body>
-    <h3>All Listings</h3>
-    <!-- <form method="get" action="/listings/new">   
-        <button>Create New Form</button>
-    </form> -->
+  <div class="container-fluid px-4">
+    <!-- Page Heading -->
+    <h1 class="text-center my-4">All Listings</h1>
 
-<div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 g-4">
-  
- <% for(let listing of allListings) { %>
- <div class="card col" style="width: 20rem;">
-  <img src="<%= listing.image.url %>" class="card-img-top" alt="Listing Image" style="height: 200px; width: 100%; object-fit: cover;">
-
-  <div class="card-body">
-    <p class="card-text"><a href="/listings/<%= listing._id %>">
-       <b><%= listing.title %></b> </a><br>
-        $<%= listing.price %> /per night
-    
-    </p>
+    <!-- Listings Grid -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <% for (let listing of allListings) { %>
+        <div class="col">
+          <div class="card h-100 shadow-sm border-0">
+            <img 
+              src="<%= listing.image.url %>" 
+              class="card-img-top" 
+              alt="Listing Image" 
+              style="height: 200px; object-fit: cover;"
+            >
+            <div class="card-body">
+              <p class="card-text mb-1">
+                <a href="/listings/<%= listing._id %>" class="text-decoration-none fw-bold text-primary">
+                  <%= listing.title %>
+                </a>
+              </p>
+              <p class="text-muted">$<%= listing.price %> /per night</p>
+            </div>
+          </div>
+        </div>
+      <% } %>
+    </div>
   </div>
-</div>
- <% }; %>
-
-</div>
-
-    
 </body>
-
