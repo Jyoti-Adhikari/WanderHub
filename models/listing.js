@@ -1,9 +1,14 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const Review = require('./review'); 
 
 const listingSchema = new Schema({
   title: {
     type: String,
+    required: true
+  },
+  price: {
+    type: Number,
     required: true
   },
   description: {
@@ -11,13 +16,8 @@ const listingSchema = new Schema({
     required: true
   },
   image: {
-    type: String,  
-    required: true,
-    default: "https://images.unsplash.com/photo-1630997065202-afb8c444da0a"
-  },
-  price: {
-    type: Number,
-    required: true
+    type: String,
+    default: 'https://source.unsplash.com/collection/483251'
   },
   location: {
     type: String,
@@ -26,6 +26,23 @@ const listingSchema = new Schema({
   country: {
     type: String,
     required: true
+  },
+  reviews: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Review'
+    }
+  ]
+});
+
+// Delete associated reviews when a listing is deleted
+listingSchema.post("findOneAndDelete", async function (doc) {
+  if (doc) {
+    await Review.deleteMany({
+      _id: {
+        $in: doc.reviews
+      }
+    });
   }
 });
 
