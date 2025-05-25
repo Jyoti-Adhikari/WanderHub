@@ -16,11 +16,12 @@
 
 Screenshots showing WanderHub in action (see `images_output/` folder):
 
-- `first_page.png` – Home Page  
-- `create_new_list.png` – Create New Listing  
-- `each_list_detail.png` – Listing Detail Page  
-- `review_page.png` – Review Submission Page  
-- `page_footer.png` – Footer Section  
+![Home Page](images_output/first_page.png)
+![Create Listing](images_output/create_new_list.png)
+![Listing Detail](images_output/each_list_detail.png)
+![Review Page](images_output/review_page.png)
+![Footer](images_output/page_footer.png)
+ 
 
 ---
 
